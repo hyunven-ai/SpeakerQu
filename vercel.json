@@ -11,14 +11,14 @@
   },
   "rewrites": [
     {
-      "source": "/api/(.*)?",
+      "source": "/api/:path*",
       "destination": {
         "type": "service",
         "service": "backend"
       }
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/assets/:path*",
       "destination": {
         "type": "service",
         "service": "frontend"
@@ -39,7 +39,7 @@
       }
     },
     {
-      "source": "/((?!api/|assets/|favicon.svg|icons.svg).*)",
+      "source": "/:path*",
       "destination": {
         "type": "service",
         "service": "frontend",
