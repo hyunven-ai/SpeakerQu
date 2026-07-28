@@ -25,14 +25,17 @@ export const upload = multer({
   fileFilter
 });
 
-// Middleware to process uploaded images with sharp (convert to WebP & resize)
+import { isR2Configured, uploadToR2 } from '../utils/r2.js';
+
+// Middleware to process uploaded images with sharp (convert to WebP & resize) and upload to R2/Local
 export const processImages = async (req, res, next) => {
   if (!req.files || req.files.length === 0) {
     return next();
   }
 
+  const useR2 = isR2Configured();
   const uploadDir = path.join(__dirname, '../../uploads');
-  if (!fs.existsSync(uploadDir)) {
+  if (!useR2 && !fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
 
@@ -41,17 +44,27 @@ export const processImages = async (req, res, next) => {
   try {
     const processPromises = req.files.map(async (file, index) => {
       const filename = `img-${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-      const filePath = path.join(uploadDir, filename);
 
       // Convert to webp, resize to max 1200px (width or height), quality 80%
-      await sharp(file.buffer)
+      const webpBuffer = await sharp(file.buffer)
         .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
         .toFormat('webp')
         .webp({ quality: 80 })
-        .toFile(filePath);
+        .toBuffer();
+
+      let imageUrl = '';
+      if (useR2) {
+        // Upload directly to Cloudflare R2
+        imageUrl = await uploadToR2(webpBuffer, filename, 'image/webp');
+      } else {
+        // Fallback to local file storage
+        const filePath = path.join(uploadDir, filename);
+        await fs.promises.writeFile(filePath, webpBuffer);
+        imageUrl = `/uploads/${filename}`;
+      }
 
       req.processedImages.push({
-        url: `/uploads/${filename}`,
+        url: imageUrl,
         originalname: file.originalname,
         index
       });
@@ -60,7 +73,7 @@ export const processImages = async (req, res, next) => {
     await Promise.all(processPromises);
     next();
   } catch (error) {
-    console.error('Error processing image with sharp:', error);
-    return res.status(500).json({ message: 'Gagal memproses gambar.', error: error.message });
+    console.error('Error processing or uploading image:', error);
+    return res.status(500).json({ message: 'Gagal memproses/mengunggah gambar.', error: error.message });
   }
 };
