@@ -19,14 +19,10 @@
     },
     {
       "source": "/:path([^.]*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend",
-        "path": "/index.html"
-      }
+      "destination": "/index.html"
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": {
         "type": "service",
         "service": "frontend"
