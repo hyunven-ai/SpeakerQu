@@ -22,7 +22,7 @@ export default function CartDrawer() {
   useEffect(() => {
     if (isCartOpen) {
       // Fetch WhatsApp settings
-      fetch('http://localhost:5000/api/settings')
+      fetch('/api/settings')
         .then(res => res.json())
         .then(data => setSettings(data))
         .catch(err => console.error('Error fetching settings:', err));
@@ -46,7 +46,7 @@ export default function CartDrawer() {
     // 1. Track WhatsApp Clicks for all items in Cart
     const productIds = cartItems.map(item => item.product.id);
     try {
-      await fetch('http://localhost:5000/api/analytics/whatsapp-click', {
+      await fetch('/api/analytics/whatsapp-click', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

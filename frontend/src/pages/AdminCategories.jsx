@@ -17,7 +17,7 @@ export default function AdminCategories() {
 
   const fetchCategories = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/categories')
+    fetch('/api/categories')
       .then(res => res.json())
       .then(data => {
         setCategories(data);
@@ -60,8 +60,8 @@ export default function AdminCategories() {
 
     const payload = { nama: nama.trim(), deskripsi: deskripsi.trim() };
     const url = editingId 
-      ? `http://localhost:5000/api/categories/${editingId}`
-      : 'http://localhost:5000/api/categories';
+      ? `/api/categories/${editingId}`
+      : '/api/categories';
     const method = editingId ? 'PUT' : 'POST';
 
     try {
@@ -96,7 +96,7 @@ export default function AdminCategories() {
     setSuccess('');
 
     try {
-      const res = await fetch(`http://localhost:5000/api/categories/${id}`, {
+      const res = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

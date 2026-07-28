@@ -12,7 +12,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/products?search=${encodeURIComponent(query)}`)
+    fetch(`/api/products?search=${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(data => {
         setProducts(data);

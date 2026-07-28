@@ -39,7 +39,7 @@ const VisitorLayout = ({ children }) => {
 
 export default function App() {
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(settings => {
         // 1. Dynamic SEO Title

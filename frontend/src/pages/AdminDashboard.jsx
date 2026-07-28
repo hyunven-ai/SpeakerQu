@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/analytics/dashboard-stats', {
+    fetch('/api/analytics/dashboard-stats', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

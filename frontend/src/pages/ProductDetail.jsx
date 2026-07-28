@@ -19,7 +19,7 @@ export default function ProductDetail() {
     }
 
     // Fetch product details
-    fetch(`http://localhost:5000/api/products/${slug}`)
+    fetch(`/api/products/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error('Produk tidak ditemukan');
         return res.json();
@@ -34,7 +34,7 @@ export default function ProductDetail() {
       });
 
     // Fetch settings
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => setSettings(data))
       .catch(err => console.error(err));
@@ -106,7 +106,7 @@ export default function ProductDetail() {
 
     // 1. Track WhatsApp Click
     try {
-      await fetch('http://localhost:5000/api/analytics/whatsapp-click', {
+      await fetch('/api/analytics/whatsapp-click', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

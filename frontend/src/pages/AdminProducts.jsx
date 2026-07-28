@@ -36,7 +36,7 @@ export default function AdminProducts() {
 
   const fetchProducts = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/products?admin=true')
+    fetch('/api/products?admin=true')
       .then(res => res.json())
       .then(data => {
         setProducts(data);
@@ -51,7 +51,7 @@ export default function AdminProducts() {
   useEffect(() => {
     fetchProducts();
     // Fetch categories for select input
-    fetch('http://localhost:5000/api/categories')
+    fetch('/api/categories')
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));
@@ -129,7 +129,7 @@ export default function AdminProducts() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -211,8 +211,8 @@ export default function AdminProducts() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/products/${editingId}`
-      : 'http://localhost:5000/api/products';
+      ? `/api/products/${editingId}`
+      : '/api/products';
     const method = editingId ? 'PUT' : 'POST';
 
     try {
@@ -246,7 +246,7 @@ export default function AdminProducts() {
     setError('');
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -22,7 +22,7 @@ export default function AdminSettings() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         setNomorWhatsapp(data.nomorWhatsapp || '');
@@ -55,7 +55,7 @@ export default function AdminSettings() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/settings', {
+      const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

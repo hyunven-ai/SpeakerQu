@@ -15,13 +15,13 @@ export default function Home() {
 
   useEffect(() => {
     // Fetch categories
-    fetch('http://localhost:5000/api/categories')
+    fetch('/api/categories')
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error('Failed fetching categories:', err));
 
     // Fetch settings for whatsapp number
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         if (data && data.nomorWhatsapp) {
@@ -33,7 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:5000/api/products';
+    let url = '/api/products';
     if (selectedCategory !== 'all') {
       url += `?category=${selectedCategory}`;
     }
