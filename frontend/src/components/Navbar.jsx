@@ -168,7 +168,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass bg-white/95 border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+        <div className="md:hidden bg-white border-b border-slate-200/80 shadow-xl px-4 pt-3 pb-6 space-y-3 relative z-50">
           {/* Mobile Search */}
           <form onSubmit={handleSearchSubmit} className="relative w-full mb-3">
             <input
