@@ -1,0 +1,71 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  nama        String
+  slug        String    @unique
+  deskripsi   String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id           String         @id @default(cuid())
+  nama         String
+  slug         String         @unique
+  deskripsi    String?
+  spesifikasi  String?        // JSON String e.g. {"Watt": "40W", "Baterai": "12 Jam"}
+  harga        Int
+  stok         Int            @default(0)
+  isActive     Boolean        @default(true)
+  categoryId   String?
+  category     Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  images       ProductImage[]
+  clicks       WhatsappClick[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  urutan    Int      @default(0)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model WhatsappClick {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  deviceType  String?
+  referrer    String?
+  createdAt   DateTime @default(now())
+}
+
+model Setting {
+  id             String   @id @default(cuid())
+  nomorWhatsapp  String
+  templatePesan  String
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+  customScript   String?
+  enableWhatsapp Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+}
