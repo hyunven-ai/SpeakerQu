@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Edit2, Trash2, Box, Eye, EyeOff, Upload, X, ArrowUp, ArrowDown, AlertCircle, Check, Sparkles } from 'lucide-react';
+import { Plus, Edit2, Trash2, Box, Eye, EyeOff, Upload, X, ArrowUp, ArrowDown, ArrowUpDown, ChevronLeft, ChevronRight, AlertCircle, Check, Sparkles } from 'lucide-react';
+
 
 export default function AdminProducts() {
   const { token } = useAuth();
@@ -33,6 +34,74 @@ export default function AdminProducts() {
   // Feedback Messages
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Sorting & Pagination States
+  const [sortField, setSortField] = useState('nama');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Sorting logic
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1);
+  };
+
+  // Get sorted products list
+  const getSortedProducts = () => {
+    const sorted = [...products];
+    if (!sortField) return sorted;
+
+    sorted.sort((a, b) => {
+      let valA = '';
+      let valB = '';
+
+      if (sortField === 'nama') {
+        valA = a.nama?.toLowerCase() || '';
+        valB = b.nama?.toLowerCase() || '';
+      } else if (sortField === 'kategori') {
+        valA = a.category?.nama?.toLowerCase() || '';
+        valB = b.category?.nama?.toLowerCase() || '';
+      } else if (sortField === 'harga') {
+        valA = a.harga || 0;
+        valB = b.harga || 0;
+      } else if (sortField === 'stok') {
+        valA = a.stok || 0;
+        valB = b.stok || 0;
+      } else if (sortField === 'status') {
+        valA = a.isActive ? 1 : 0;
+        valB = b.isActive ? 1 : 0;
+      }
+
+      if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return sorted;
+  };
+
+  const sortedProducts = getSortedProducts();
+
+  // Pagination calculations
+  const totalItems = sortedProducts.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = sortedProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Adjust page if it exceeds total pages
+  useEffect(() => {
+    if (currentPage > 1 && currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [products, itemsPerPage, totalPages, currentPage]);
+
 
   const fetchProducts = () => {
     setLoading(true);
@@ -310,20 +379,81 @@ export default function AdminProducts() {
               Belum ada produk speaker yang ditambahkan. Klik tombol "Tambah Speaker" di atas.
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+              <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-100 text-sm">
-                <thead className="bg-slate-50 text-slate-500 font-semibold text-left">
+                <thead className="bg-slate-50 text-slate-500 font-semibold text-left select-none">
                   <tr>
-                    <th className="px-6 py-4">Foto & Nama</th>
-                    <th className="px-6 py-4">Kategori</th>
-                    <th className="px-6 py-4">Harga</th>
-                    <th className="px-6 py-4">Stok</th>
-                    <th className="px-6 py-4">Status</th>
+                    <th 
+                      className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      onClick={() => handleSort('nama')}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        Foto & Nama
+                        {sortField === 'nama' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-blue-600" /> : <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />
+                        )}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      onClick={() => handleSort('kategori')}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        Kategori
+                        {sortField === 'kategori' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-blue-600" /> : <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />
+                        )}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      onClick={() => handleSort('harga')}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        Harga
+                        {sortField === 'harga' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-blue-600" /> : <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />
+                        )}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      onClick={() => handleSort('stok')}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        Stok
+                        {sortField === 'stok' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-blue-600" /> : <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />
+                        )}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      onClick={() => handleSort('status')}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        Status
+                        {sortField === 'status' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-blue-600" /> : <ArrowDown className="w-3.5 h-3.5 text-blue-600" />
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />
+                        )}
+                      </div>
+                    </th>
                     <th className="px-6 py-4 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {products.map((p) => {
+                  {currentProducts.map((p) => {
                     const hasImage = p.images && p.images.length > 0;
                     const imgUrl = hasImage 
                       ? (p.images[0].url.startsWith('http') ? p.images[0].url : `http://localhost:5000${p.images[0].url}`)
@@ -382,6 +512,62 @@ export default function AdminProducts() {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination & Show items selection */}
+            <div className="border-t border-slate-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/50">
+              <div className="flex items-center gap-2.5 text-slate-500 text-xs">
+                <span>Tampilkan</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="bg-white border border-slate-200 text-slate-700 font-bold rounded-lg px-2.5 py-1 focus:outline-none focus:border-blue-500 transition-colors"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>item per halaman</span>
+                <span className="ml-2 text-slate-400">
+                  (Menampilkan {totalItems === 0 ? 0 : indexOfFirstItem + 1} - {Math.min(indexOfLastItem, totalItems)} dari {totalItems} produk)
+                </span>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg transition-colors cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        currentPage === i + 1
+                          ? 'bg-blue-600 text-white shadow-md'
+                          : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg transition-colors cursor-pointer"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
           )}
         </div>
       ) : (

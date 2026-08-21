@@ -11,6 +11,7 @@ import ScrollProgress from './components/ScrollProgress';
 // Pages
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
+import CategoryPage from './pages/CategoryPage';
 import SearchPage from './pages/SearchPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
@@ -113,6 +114,14 @@ export default function App() {
               element={
                 <VisitorLayout>
                   <ProductDetail />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/kategori/:slug"
+              element={
+                <VisitorLayout>
+                  <CategoryPage />
                 </VisitorLayout>
               }
             />
