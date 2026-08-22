@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import SkeletonCard from '../components/SkeletonCard';
-import { Sparkles, Music, Radio, Volume2, SlidersHorizontal, Tv, X, ChevronRight, MessageCircle } from 'lucide-react';
+import { Sparkles, Music, Radio, Volume2, SlidersHorizontal, Tv, X, ChevronRight, MessageCircle, MapPin } from 'lucide-react';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -11,6 +11,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('6281234567890');
+  const [alamat, setAlamat] = useState('');
+  const [mapLink, setMapLink] = useState('');
   const location = useLocation();
 
   useEffect(() => {
@@ -20,12 +22,14 @@ export default function Home() {
       .then(data => setCategories(data))
       .catch(err => console.error('Failed fetching categories:', err));
 
-    // Fetch settings for whatsapp number
+    // Fetch settings
     fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
-        if (data && data.nomorWhatsapp) {
-          setWhatsappNumber(data.nomorWhatsapp);
+        if (data) {
+          if (data.nomorWhatsapp) setWhatsappNumber(data.nomorWhatsapp);
+          if (data.alamat) setAlamat(data.alamat);
+          if (data.mapLink) setMapLink(data.mapLink);
         }
       })
       .catch(err => console.error('Failed fetching settings in Home:', err));
@@ -511,7 +515,7 @@ export default function Home() {
                 <p className="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
                   Bingung memilih speaker yang sesuai dengan ruangan atau acara Anda? Hubungi customer service kami dan dapatkan rekomendasi terbaik langsung via WhatsApp.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-6 pt-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 text-xs">
                   <div className="flex items-center gap-3">
                     <span className="text-xl">📞</span>
                     <div>
@@ -527,14 +531,41 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+
+                {alamat && (
+                  <div className="flex items-start gap-3 pt-6 border-t border-slate-800">
+                    <MapPin className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-slate-400 font-medium text-xs">Lokasi Fisik Toko</div>
+                      <div className="font-semibold text-white text-xs sm:text-sm whitespace-pre-line leading-relaxed mt-1">
+                        {alamat}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center">
+              <div className="lg:col-span-5 flex flex-col items-stretch justify-center gap-6">
+                {mapLink && (
+                  <div className="w-full h-60 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-slate-800 bg-slate-950 relative group">
+                    <iframe
+                      src={mapLink}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Google Maps"
+                      className="opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                    ></iframe>
+                  </div>
+                )}
                 <a
                   href={`https://wa.me/${whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-base px-10 py-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-3 w-full sm:w-auto justify-center cursor-pointer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-base px-10 py-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-3 w-full justify-center cursor-pointer"
                 >
                   <MessageCircle className="w-5 h-5 fill-white" /> Hubungi via WhatsApp
                 </a>

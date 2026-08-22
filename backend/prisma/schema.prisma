@@ -67,5 +67,7 @@ model Setting {
   seoKeywords    String?
   customScript   String?
   enableWhatsapp Boolean  @default(true)
+  alamat         String?
+  mapLink        String?
   updatedAt      DateTime @updatedAt
 }

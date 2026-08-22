@@ -8,7 +8,9 @@ const DEFAULT_SETTING = {
   seoDescription: 'Toko online speaker premium terbaik. Dapatkan kualitas audio tingkat tinggi, pesan mudah langsung via WhatsApp.',
   seoKeywords: 'speaker, bluetooth, partybox, soundbar, audio premium',
   customScript: '',
-  enableWhatsapp: true
+  enableWhatsapp: true,
+  alamat: 'TM HARCO GLODOK,lantai 6 blok AOF no 16\nJln Hayam Wuruk,kel.mangga besar,kec taman sari,jakarta barat - 11180',
+  mapLink: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.8624103138865!2d106.81741517457788!3d-6.149174093837887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7435f3dfd95%3A0xe54c15dfbb4927a4!2sHarco%20Glodok!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid'
 };
 
 export const getSettings = async (req, res) => {
@@ -29,7 +31,7 @@ export const getSettings = async (req, res) => {
 };
 
 export const updateSettings = async (req, res) => {
-  const { nomorWhatsapp, templatePesan, seoTitle, seoDescription, seoKeywords, customScript, enableWhatsapp } = req.body;
+  const { nomorWhatsapp, templatePesan, seoTitle, seoDescription, seoKeywords, customScript, enableWhatsapp, alamat, mapLink } = req.body;
 
   if (!nomorWhatsapp || !templatePesan) {
     return res.status(400).json({ message: 'Nomor WhatsApp dan template pesan wajib diisi.' });
@@ -45,7 +47,9 @@ export const updateSettings = async (req, res) => {
       seoDescription: seoDescription ? seoDescription.trim() : null,
       seoKeywords: seoKeywords ? seoKeywords.trim() : null,
       customScript: customScript ? customScript.trim() : null,
-      enableWhatsapp: enableWhatsapp !== undefined ? Boolean(enableWhatsapp) : true
+      enableWhatsapp: enableWhatsapp !== undefined ? Boolean(enableWhatsapp) : true,
+      alamat: alamat ? alamat.trim() : null,
+      mapLink: mapLink ? mapLink.trim() : null
     };
 
     if (setting) {

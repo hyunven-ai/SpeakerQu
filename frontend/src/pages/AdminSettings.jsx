@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { useAuth } from '../context/AuthContext';
-import { Settings, AlertCircle, Check, HelpCircle, Globe, Code, MessageSquare } from 'lucide-react';
+import { Settings, AlertCircle, Check, HelpCircle, Globe, Code, MessageSquare, MapPin } from 'lucide-react';
 
 export default function AdminSettings() {
   const { token } = useAuth();
@@ -16,6 +16,10 @@ export default function AdminSettings() {
   const [seoDescription, setSeoDescription] = useState('');
   const [seoKeywords, setSeoKeywords] = useState('');
   const [customScript, setCustomScript] = useState('');
+
+  // Address & Map Settings
+  const [alamat, setAlamat] = useState('');
+  const [mapLink, setMapLink] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -32,6 +36,8 @@ export default function AdminSettings() {
         setSeoDescription(data.seoDescription || '');
         setSeoKeywords(data.seoKeywords || '');
         setCustomScript(data.customScript || '');
+        setAlamat(data.alamat || '');
+        setMapLink(data.mapLink || '');
         setLoading(false);
       })
       .catch(err => {
@@ -68,7 +74,9 @@ export default function AdminSettings() {
           seoTitle: seoTitle.trim(),
           seoDescription: seoDescription.trim(),
           seoKeywords: seoKeywords.trim(),
-          customScript: customScript.trim()
+          customScript: customScript.trim(),
+          alamat: alamat.trim(),
+          mapLink: mapLink.trim()
         })
       });
       const data = await res.json();
@@ -252,7 +260,46 @@ export default function AdminSettings() {
             </div>
           </div>
 
-          {/* Card 3: Custom Scripts (Livechat/Analytics) */}
+          {/* Card 3: Alamat & Peta Google Maps */}
+          <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-3d-soft">
+            <h2 className="text-lg font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-blue-600" />
+              Alamat Toko & Peta Google Maps
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-bold text-slate-700 tracking-wide uppercase block mb-1">
+                  Alamat Fisik Toko
+                </label>
+                <textarea
+                  placeholder="Masukkan alamat lengkap toko..."
+                  rows="3"
+                  value={alamat}
+                  onChange={(e) => setAlamat(e.target.value)}
+                  className="w-full bg-slate-50/50 focus:bg-white text-slate-800 border border-slate-200 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-sm transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 tracking-wide uppercase block mb-1">
+                  Link Embed Google Maps (iframe src)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Contoh: https://www.google.com/maps/embed?pb=..."
+                  value={mapLink}
+                  onChange={(e) => setMapLink(e.target.value)}
+                  className="w-full bg-slate-50/50 focus:bg-white text-slate-800 border border-slate-200 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-sm transition-all"
+                />
+                <span className="text-[10px] text-slate-400 font-medium mt-1.5 block">
+                  Petunjuk: Buka Google Maps, cari lokasi toko Anda, klik Share (Bagikan) &rarr; Embed a map (Sematkan peta), lalu salin nilai <strong>src</strong> saja di dalam tag iframe.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Custom Scripts (Livechat/Analytics) */}
           <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-3d-soft">
             <h2 className="text-lg font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4 flex items-center gap-2">
               <Code className="w-5 h-5 text-blue-600" />

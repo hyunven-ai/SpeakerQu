@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { MapPin } from 'lucide-react';
 
 export default function Footer() {
+  const [alamat, setAlamat] = useState('');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.alamat) {
+          setAlamat(data.alamat);
+        }
+      })
+      .catch(err => console.error('Failed fetching settings in Footer:', err));
+  }, []);
+
   return (
     <footer className="bg-slate-900 text-slate-400 py-12 mt-auto border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,6 +27,12 @@ export default function Footer() {
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
               Toko online spesialis speaker premium dengan transaksi langsung dan nyaman via WhatsApp. Temukan audio impianmu sekarang!
             </p>
+            {alamat && (
+              <div className="flex items-start gap-2 text-xs text-slate-500 leading-relaxed max-w-sm mt-4 pt-4 border-t border-slate-800">
+                <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                <span className="whitespace-pre-line">{alamat}</span>
+              </div>
+            )}
           </div>
           <div>
             <h4 className="text-white text-sm font-semibold tracking-wider uppercase mb-4">
