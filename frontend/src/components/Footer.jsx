@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-white text-lg font-black tracking-tight mb-4 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              SpeakerQu
+              Nurseha Audio, Harco Glodok Jakarta Barat
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
               Toko online spesialis speaker premium dengan transaksi langsung dan nyaman via WhatsApp. Temukan audio impianmu sekarang!
