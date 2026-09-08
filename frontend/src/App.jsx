@@ -28,6 +28,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminCategories from './pages/AdminCategories';
 import AdminProducts from './pages/AdminProducts';
+import AdminHeroSlides from './pages/AdminHeroSlides';
 import AdminSettings from './pages/AdminSettings';
 
 // Scroll to Top on Navigation
@@ -273,6 +274,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <AdminProducts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/slider"
+              element={
+                <ProtectedRoute>
+                  <AdminHeroSlides />
                 </ProtectedRoute>
               }
             />

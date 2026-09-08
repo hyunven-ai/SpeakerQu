@@ -87,9 +87,55 @@ const SLIDES = [
   }
 ];
 
+const ACCENT_GLOWS = {
+  blue: 'from-blue-600/30 via-indigo-600/20 to-transparent',
+  indigo: 'from-indigo-600/30 via-sky-600/20 to-transparent',
+  cyan: 'from-cyan-600/30 via-blue-600/20 to-transparent',
+  emerald: 'from-emerald-600/30 via-teal-600/20 to-transparent',
+  purple: 'from-purple-600/30 via-pink-600/20 to-transparent',
+  rose: 'from-rose-600/30 via-orange-600/20 to-transparent'
+};
+
+const normalizeSlide = (s, idx) => {
+  let specs = [];
+  if (Array.isArray(s.specs)) {
+    specs = s.specs;
+  } else if (typeof s.specs === 'string') {
+    try {
+      specs = JSON.parse(s.specs);
+    } catch {
+      specs = [];
+    }
+  }
+
+  const accentColor = s.accentColor || 'blue';
+  const glowColor = s.glowColor || ACCENT_GLOWS[accentColor] || ACCENT_GLOWS.blue;
+  const icons = [Flame, Tv, Radio, Sparkles];
+
+  return {
+    id: s.id || `slide-${idx}`,
+    badge: s.badge || 'PRO AUDIO • GARANSI RESMI 1 TAHUN',
+    badgeIcon: s.badgeIcon || icons[idx % icons.length] || Sparkles,
+    titlePrefix: s.titlePrefix || '',
+    titleGradient: s.titleGradient || '',
+    subtitle: s.subtitle || '',
+    image: s.imageUrl || s.image || '',
+    imageAlt: s.imageAlt || s.titlePrefix || 'Speaker Audio Nurseha',
+    priceTag: s.priceTag || '',
+    highlightBadge: s.highlightBadge || '',
+    categorySlug: s.categorySlug || '',
+    waMessage: s.waMessage || 'Halo Nurseha Audio, saya tertarik dengan paket audio ini.',
+    accentColor,
+    glowColor,
+    label: s.label || `0${idx + 1}. Slide`,
+    specs
+  };
+};
+
 const AUTO_PLAY_DURATION = 6000; // 6 seconds per slide
 
 export default function HeroCarousel({ whatsappNumber = '6287777835864', onSelectCategory }) {
+  const [slides, setSlides] = useState(() => SLIDES.map(normalizeSlide));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -99,17 +145,35 @@ export default function HeroCarousel({ whatsappNumber = '6287777835864', onSelec
   const touchEndX = useRef(0);
   const progressIntervalRef = useRef(null);
 
-  const currentSlide = SLIDES[currentIndex];
+  // Fetch dynamic slides from backend
+  useEffect(() => {
+    fetch('/api/slides')
+      .then((res) => {
+        if (!res.ok) throw new Error('Gagal mengambil data slides');
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data.map(normalizeSlide));
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load dynamic slides from API, using fallback:', err);
+      });
+  }, []);
+
+  const totalSlides = slides.length || 1;
+  const currentSlide = slides[currentIndex] || slides[0] || {};
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
+    setCurrentIndex((prev) => (prev + 1) % totalSlides);
     setProgress(0);
-  }, []);
+  }, [totalSlides]);
 
   const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
     setProgress(0);
-  }, []);
+  }, [totalSlides]);
 
   const goToSlide = (index) => {
     setCurrentIndex(index);
@@ -354,7 +418,7 @@ export default function HeroCarousel({ whatsappNumber = '6287777835864', onSelec
           
           {/* Slide Indicators / Tabs */}
           <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 sm:gap-3">
-            {SLIDES.map((slide, idx) => {
+            {slides.map((slide, idx) => {
               const isActive = idx === currentIndex;
               return (
                 <button

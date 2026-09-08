@@ -71,3 +71,24 @@ model Setting {
   mapLink        String?
   updatedAt      DateTime @updatedAt
 }
+
+model HeroSlide {
+  id             String   @id @default(cuid())
+  badge          String
+  titlePrefix    String
+  titleGradient  String
+  subtitle       String
+  imageUrl       String
+  imageAlt       String?
+  priceTag       String?
+  highlightBadge String?
+  categorySlug   String?
+  waMessage      String?
+  specs          String?  // JSON string: [{"label": "1000W Peak", "sub": "Daya Output"}, ...]
+  accentColor    String?  @default("blue")
+  label          String?
+  urutan         Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

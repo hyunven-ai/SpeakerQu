@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, ShoppingBag, Settings, LogOut, Globe } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, ShoppingBag, SlidersHorizontal, Settings, LogOut, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminLayout({ children }) {
@@ -17,6 +17,7 @@ export default function AdminLayout({ children }) {
     { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { label: 'Kelola Kategori', path: '/admin/kategori', icon: FolderKanban },
     { label: 'Kelola Produk', path: '/admin/produk', icon: ShoppingBag },
+    { label: 'Kelola Hero Slider', path: '/admin/slider', icon: SlidersHorizontal },
     { label: 'Pengaturan Toko', path: '/admin/pengaturan', icon: Settings },
   ];
 
