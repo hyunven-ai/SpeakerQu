@@ -10,9 +10,20 @@ import ScrollProgress from './components/ScrollProgress';
 
 // Pages
 import Home from './pages/Home';
+import ProductsPage from './pages/ProductsPage';
 import ProductDetail from './pages/ProductDetail';
 import CategoryPage from './pages/CategoryPage';
 import SearchPage from './pages/SearchPage';
+import AboutPage from './pages/AboutPage';
+import WhyChooseUsPage from './pages/WhyChooseUsPage';
+import ServicesPage from './pages/ServicesPage';
+import PortfolioPage from './pages/PortfolioPage';
+import BlogPage from './pages/BlogPage';
+import BlogDetailPage from './pages/BlogDetailPage';
+import FaqPage from './pages/FaqPage';
+import ContactPage from './pages/ContactPage';
+import CartPage from './pages/CartPage';
+import NotFoundPage from './pages/NotFoundPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminCategories from './pages/AdminCategories';
@@ -125,10 +136,98 @@ export default function App() {
               }
             />
             <Route
+              path="/products"
+              element={
+                <VisitorLayout>
+                  <ProductsPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/products/:slug"
+              element={
+                <VisitorLayout>
+                  <ProductDetail />
+                </VisitorLayout>
+              }
+            />
+            <Route
               path="/produk/:slug"
               element={
                 <VisitorLayout>
                   <ProductDetail />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <VisitorLayout>
+                  <AboutPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/why-choose-us"
+              element={
+                <VisitorLayout>
+                  <WhyChooseUsPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/services"
+              element={
+                <VisitorLayout>
+                  <ServicesPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/portfolio"
+              element={
+                <VisitorLayout>
+                  <PortfolioPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/blog"
+              element={
+                <VisitorLayout>
+                  <BlogPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/blog/:slug"
+              element={
+                <VisitorLayout>
+                  <BlogDetailPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/faq"
+              element={
+                <VisitorLayout>
+                  <FaqPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <VisitorLayout>
+                  <ContactPage />
+                </VisitorLayout>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <VisitorLayout>
+                  <CartPage />
                 </VisitorLayout>
               }
             />
@@ -186,8 +285,15 @@ export default function App() {
               }
             />
 
-            {/* Catch-all redirect */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* 404 Catch-all */}
+            <Route
+              path="*"
+              element={
+                <VisitorLayout>
+                  <NotFoundPage />
+                </VisitorLayout>
+              }
+            />
           </Routes>
         </Router>
       </CartProvider>

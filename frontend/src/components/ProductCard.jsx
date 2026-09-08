@@ -47,7 +47,7 @@ export default function ProductCard({ product }) {
         {/* Hover overlay for quick action */}
         <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
           <Link
-            to={`/produk/${product.slug}`}
+            to={`/products/${product.slug}`}
             className="bg-white hover:bg-slate-50 text-slate-900 p-3 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center"
             title="Lihat Detail"
           >
@@ -59,7 +59,7 @@ export default function ProductCard({ product }) {
       {/* Product Info */}
       <div className="p-5 flex flex-col flex-1">
         <h3 className="text-base font-bold text-slate-900 line-clamp-1 group-hover:text-blue-600 transition-colors mb-1.5">
-          <Link to={`/produk/${product.slug}`}>
+          <Link to={`/products/${product.slug}`}>
             {product.nama}
           </Link>
         </h3>
@@ -68,27 +68,31 @@ export default function ProductCard({ product }) {
           {product.deskripsi}
         </p>
         
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-50">
+        {/* 2-Baris: Atas Harga, Bawah Keranjang */}
+        <div className="mt-auto pt-3 border-t border-slate-100 flex flex-col gap-2.5">
+          {/* Baris 1 (Atas): Harga */}
           <div>
-            <div className="text-xs text-slate-400 font-medium">Harga</div>
-            <div className="text-lg font-black text-slate-900 tracking-tight">
+            <div className="text-[11px] text-slate-400 font-medium">Harga</div>
+            <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
               {formatRupiah(product.harga)}
             </div>
           </div>
           
+          {/* Baris 2 (Bawah): Tombol Keranjang */}
           {isOutOfStock ? (
             <Link
-              to={`/produk/${product.slug}`}
-              className="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/50 flex items-center gap-1.5"
+              to={`/products/${product.slug}`}
+              className="w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/60 flex items-center justify-center gap-1.5"
             >
               Tanya Stok
             </Link>
           ) : (
             <button
               onClick={() => addToCart(product, 1)}
-              className="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1.5 cursor-pointer"
+              className="w-full py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white shadow-sm shadow-blue-600/20 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <ShoppingCart className="w-3.5 h-3.5" /> + Keranjang
+              <ShoppingCart className="w-4 h-4" />
+              <span>+ Keranjang</span>
             </button>
           )}
         </div>
