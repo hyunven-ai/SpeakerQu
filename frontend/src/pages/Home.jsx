@@ -5,6 +5,7 @@ import TrustStrip from '../components/TrustStrip';
 import FeaturedCarousel from '../components/FeaturedCarousel';
 import ProductCard from '../components/ProductCard';
 import SkeletonCard from '../components/SkeletonCard';
+import CategoryTabBar from '../components/CategoryTabBar';
 import SEO from '../components/SEO';
 import { 
   Sparkles, 
@@ -135,32 +136,13 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Category Pills Filter */}
-        <div className="flex overflow-x-auto no-scrollbar gap-2.5 pb-3 mb-8">
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex-shrink-0 cursor-pointer ${
-              selectedCategory === 'all'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-            }`}
-          >
-            Semua Kategori
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.slug)}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex-shrink-0 cursor-pointer ${
-                selectedCategory === cat.slug
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              {cat.nama}
-            </button>
-          ))}
-        </div>
+        {/* Category Segmented Tab Bar */}
+        <CategoryTabBar
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          products={products}
+        />
 
         {/* Products Grid */}
         {loading ? (

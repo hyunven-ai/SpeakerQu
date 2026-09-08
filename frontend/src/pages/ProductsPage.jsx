@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import SkeletonCard from '../components/SkeletonCard';
 import SEO from '../components/SEO';
+import CategoryTabBar from '../components/CategoryTabBar';
 import { Search, Filter, SlidersHorizontal, ArrowUpDown, X, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 
 const BRANDS = ['Semua Brand', 'BareTone', 'SoundBest', 'Lainnya'];
@@ -148,32 +149,13 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        {/* Category Navigation Pills (Horizontal) */}
-        <div className="flex overflow-x-auto no-scrollbar gap-2 pb-3 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <button
-            onClick={() => handleCategoryClick('all')}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex-shrink-0 cursor-pointer ${
-              selectedCategory === 'all'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-            }`}
-          >
-            Semua Produk ({products.length})
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleCategoryClick(cat.slug)}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex-shrink-0 cursor-pointer ${
-                selectedCategory === cat.slug
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              {cat.nama}
-            </button>
-          ))}
-        </div>
+        {/* Category Navigation Segmented Tab Bar */}
+        <CategoryTabBar
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleCategoryClick}
+          products={products}
+        />
 
         {/* Search & Sort Bar */}
         <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
