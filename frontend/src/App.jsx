@@ -29,6 +29,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminCategories from './pages/AdminCategories';
 import AdminProducts from './pages/AdminProducts';
 import AdminHeroSlides from './pages/AdminHeroSlides';
+import AdminContactInfo from './pages/AdminContactInfo';
 import AdminSettings from './pages/AdminSettings';
 
 // Scroll to Top on Navigation
@@ -282,6 +283,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <AdminHeroSlides />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/kontak"
+              element={
+                <ProtectedRoute>
+                  <AdminContactInfo />
                 </ProtectedRoute>
               }
             />

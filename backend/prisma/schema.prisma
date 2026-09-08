@@ -92,3 +92,17 @@ model HeroSlide {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model ContactInfo {
+  id        String   @id @default(cuid())
+  type      String   // 'address' | 'whatsapp' | 'hours' | 'email' | 'custom'
+  title     String   // e.g. 'Alamat Toko Fisik'
+  value     String   // e.g. 'TM HARCO GLODOK...'
+  subtext   String?  // e.g. 'Respon cepat setiap hari'
+  icon      String?  @default("MapPin")
+  link      String?  // e.g. 'https://wa.me/...'
+  urutan    Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

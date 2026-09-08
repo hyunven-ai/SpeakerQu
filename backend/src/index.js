@@ -11,6 +11,7 @@ import settingRoutes from './routes/settingRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import slideRoutes from './routes/slideRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use('/api/settings', settingRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/slides', slideRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Base route
 app.get('/', (req, res) => {

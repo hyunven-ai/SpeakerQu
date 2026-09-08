@@ -5,6 +5,8 @@ import { MapPin, Phone, Mail, Clock, MessageCircle, Instagram, Facebook, Youtube
 export default function Footer() {
   const [alamat, setAlamat] = useState('TM HARCO GLODOK, lantai 6 blok AOF no 16\nJln Hayam Wuruk, kel. mangga besar, kec taman sari, jakarta barat - 11180');
   const [whatsappNumber, setWhatsappNumber] = useState('6287777835864');
+  const [email, setEmail] = useState('info@nursehaaudio.com');
+  const [jamOperasional, setJamOperasional] = useState('Setiap Hari (09.00 - 21.00 WIB)');
 
   useEffect(() => {
     fetch('/api/settings')
@@ -16,6 +18,23 @@ export default function Footer() {
         }
       })
       .catch(err => console.error('Failed fetching settings in Footer:', err));
+
+    fetch('/api/contacts')
+      .then(res => res.json())
+      .then(items => {
+        if (Array.isArray(items)) {
+          const addrItem = items.find(i => i.type === 'address' && i.isActive);
+          const waItem = items.find(i => i.type === 'whatsapp' && i.isActive);
+          const emailItem = items.find(i => i.type === 'email' && i.isActive);
+          const hoursItem = items.find(i => i.type === 'hours' && i.isActive);
+
+          if (addrItem?.value) setAlamat(addrItem.value);
+          if (waItem?.value) setWhatsappNumber(waItem.value.replace(/[^0-9]/g, ''));
+          if (emailItem?.value) setEmail(emailItem.value);
+          if (hoursItem?.value) setJamOperasional(hoursItem.value);
+        }
+      })
+      .catch(err => console.error('Failed fetching contacts in Footer:', err));
   }, []);
 
   return (
@@ -187,11 +206,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-sky-400 flex-shrink-0" />
-                <span className="text-slate-400">info@nursehaaudio.com</span>
+                <a href={`mailto:${email}`} className="text-slate-400 hover:text-white transition-colors">{email}</a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                <span className="text-slate-400">Setiap Hari (09.00 - 21.00 WIB)</span>
+                <span className="text-slate-400">{jamOperasional}</span>
               </div>
             </div>
           </div>

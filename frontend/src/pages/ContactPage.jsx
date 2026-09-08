@@ -9,11 +9,33 @@ import {
   Send, 
   Sparkles, 
   CheckCircle2,
-  Building2
+  Building2,
+  Globe,
+  Headphones
 } from 'lucide-react';
+
+const ICON_MAP = {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  MessageCircle,
+  Building2,
+  Globe,
+  Headphones
+};
+
+const COLOR_MAP = {
+  address: 'bg-blue-50 border-blue-100 text-blue-600',
+  whatsapp: 'bg-emerald-50 border-emerald-100 text-emerald-600',
+  hours: 'bg-amber-50 border-amber-100 text-amber-500',
+  email: 'bg-purple-50 border-purple-100 text-purple-600',
+  custom: 'bg-indigo-50 border-indigo-100 text-indigo-600'
+};
 
 export default function ContactPage() {
   const [settings, setSettings] = useState(null);
+  const [contacts, setContacts] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     whatsapp: '',
@@ -28,6 +50,15 @@ export default function ContactPage() {
       .then(res => res.json())
       .then(data => setSettings(data))
       .catch(err => console.error(err));
+
+    fetch('/api/contacts')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setContacts(data);
+        }
+      })
+      .catch(err => console.error('Failed to load contacts:', err));
   }, []);
 
   const waNumber = settings?.nomorWhatsapp || '6287777835864';
@@ -107,58 +138,99 @@ export default function ContactPage() {
             </div>
 
             <div className="space-y-4">
-              {/* Alamat Fisik */}
-              <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">Alamat Toko Fisik</h3>
-                  <p className="text-xs text-slate-600 whitespace-pre-line leading-relaxed mt-1">
-                    {storeAddress}
-                  </p>
-                </div>
-              </div>
+              {contacts.length > 0 ? (
+                contacts.map((item) => {
+                  const IconComp = ICON_MAP[item.icon] || MapPin;
+                  const colorClass = COLOR_MAP[item.type] || COLOR_MAP.custom;
+                  return (
+                    <div 
+                      key={item.id} 
+                      className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4 hover:border-blue-200 transition-colors"
+                    >
+                      <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center flex-shrink-0 ${colorClass}`}>
+                        <IconComp className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-bold text-slate-900">{item.title}</h3>
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`text-xs font-bold hover:underline block mt-1 whitespace-pre-line leading-relaxed ${
+                              item.type === 'whatsapp' ? 'text-emerald-600' : 'text-slate-800 hover:text-blue-600'
+                            }`}
+                          >
+                            {item.value}
+                          </a>
+                        ) : (
+                          <p className="text-xs text-slate-600 whitespace-pre-line leading-relaxed mt-1">
+                            {item.value}
+                          </p>
+                        )}
+                        {item.subtext && (
+                          <p className="text-[11px] text-slate-400 mt-0.5">{item.subtext}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <>
+                  {/* Alamat Fisik */}
+                  <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">Alamat Toko Fisik</h3>
+                      <p className="text-xs text-slate-600 whitespace-pre-line leading-relaxed mt-1">
+                        {storeAddress}
+                      </p>
+                    </div>
+                  </div>
 
-              {/* WhatsApp */}
-              <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                  <MessageCircle className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">Nomor WhatsApp Resmi</h3>
-                  <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-600 font-bold hover:underline block mt-1">
-                    +{waNumber}
-                  </a>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Respon cepat setiap hari</p>
-                </div>
-              </div>
+                  {/* WhatsApp */}
+                  <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
+                      <MessageCircle className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">Nomor WhatsApp Resmi</h3>
+                      <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-600 font-bold hover:underline block mt-1">
+                        +{waNumber}
+                      </a>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Respon cepat setiap hari</p>
+                    </div>
+                  </div>
 
-              {/* Jam Operasional */}
-              <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 flex-shrink-0">
-                  <Clock className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">Jam Operasional</h3>
-                  <p className="text-xs text-slate-600 mt-1">
-                    Senin - Minggu: <strong>09.00 - 21.00 WIB</strong>
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Buka setiap hari termasuk hari libur nasional</p>
-                </div>
-              </div>
+                  {/* Jam Operasional */}
+                  <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 flex-shrink-0">
+                      <Clock className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">Jam Operasional</h3>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Senin - Minggu: <strong>09.00 - 21.00 WIB</strong>
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Buka setiap hari termasuk hari libur nasional</p>
+                    </div>
+                  </div>
 
-              {/* Email */}
-              <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
-                  <Mail className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">Email Resmi</h3>
-                  <p className="text-xs text-slate-600 mt-1">info@nursehaaudio.com</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Untuk penawaran proyek & pengadaan instansi</p>
-                </div>
-              </div>
+                  {/* Email */}
+                  <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-3d-soft flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">Email Resmi</h3>
+                      <p className="text-xs text-slate-600 mt-1">info@nursehaaudio.com</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Untuk penawaran proyek & pengadaan instansi</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
